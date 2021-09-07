@@ -49,12 +49,11 @@ android {
             //     path 'jni/CMakeLists.txt'
             // }
         }
-       
     }
     lintOptions {
         abortOnError false
     }
-    
+
     if (buildAsLibrary) {
         libraryVariants.all { variant ->
             variant.outputs.each { output ->
@@ -77,15 +76,30 @@ task stamp() {
         new File("${projectDir}/src/main/assets/data", "stamp").text = "${new SimpleDateFormat('ddMMyyyyhhmmss').format(new Date())}"
     }
 }
-
 task downloadDependencies() {
     def Reinstead = '0.2'
+    def ReinsteadSHA256 = '8cfd70be09ea95726b0661970c81c788b4f35352e45c2171757a902dd0130741'
     def SDL2 = '2.0.16'
+    def SDL2SHA256 = '65be9ff6004034b5b2ce9927b5a4db1814930f169c4b2dae0a1e4697075f287b'
     doLast {
         download {
             src "https://github.com/instead-hub/reinstead/archive/${Reinstead}.zip"
             dest new File(buildDir, "reinstead-${Reinstead}.zip")
             overwrite true
+        }
+        verifyChecksum {
+            src new File(buildDir, "reinstead-${Reinstead}.zip")
+            algorithm 'SHA-256'
+            checksum ReinsteadSHA256
+        }
+        download {
+            src "https://www.libsdl.org/release/SDL2-${SDL2}.tar.gz"
+            dest buildDir
+        }
+        verifyChecksum {
+            src new File(buildDir, "SDL2-${SDL2}.tar.gz")
+            algorithm 'SHA-256'
+            checksum SDL2SHA256
         }
         copy {
             from zipTree("${buildDir}/reinstead-${Reinstead}.zip")
@@ -93,11 +107,6 @@ task downloadDependencies() {
         }
         delete("jni/src/reinstead")
         file("jni/src/reinstead-${Reinstead}").renameTo(file('jni/src/reinstead'))
-
-        download {
-            src "https://www.libsdl.org/release/SDL2-${SDL2}.tar.gz"
-            dest buildDir
-        }
 
         delete("jni/SDL")
         copy {
