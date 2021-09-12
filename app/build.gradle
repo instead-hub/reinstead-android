@@ -17,8 +17,8 @@ android {
         }
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 2
-        versionName "0.2"
+        versionCode 3
+        versionName "0.3"
         externalNativeBuild {
             ndkBuild {
                 arguments "APP_PLATFORM=android-16"
@@ -77,8 +77,8 @@ task stamp() {
     }
 }
 task downloadDependencies() {
-    def Reinstead = 'f76817b59e1550bf2a10e08b48b3e19ccfa00566'
-    def ReinsteadSHA256 = '51feb2c43867ea0d2c8b09df7506ac07c4bde225fc73f2107b88a72df649123f'
+    def Reinstead = '0.3'
+    def ReinsteadSHA256 = '1d0d81c9e6b51c24e0085c3425514f8f7c0a84faaaedff82e0beb9a912a8ae5d'
     def SDL2 = '2.0.16'
     def SDL2SHA256 = '65be9ff6004034b5b2ce9927b5a4db1814930f169c4b2dae0a1e4697075f287b'
     doLast {
