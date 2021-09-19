@@ -1,0 +1,5 @@
+* space distance while font resizing fix;
+* / -> ! in system wide commands;
+* !saves - list saves, !rm - remove save;
+* bugfixes.
+
