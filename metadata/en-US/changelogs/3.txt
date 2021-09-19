@@ -1,0 +1,3 @@
+* parser engine updated to 2.2.2;
+* fix with scroll and keyboard;
+* bug fixes.

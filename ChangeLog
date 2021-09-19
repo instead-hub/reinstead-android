@@ -1,2 +1,8 @@
+0.3
+  * parser engine updated to 2.2.2;
+  * parser correct messages fix;
+  * fix with scroll and keyboard;
+  * bug fixes.
+
 0.2
   * first release for Android.
