@@ -1,3 +1,10 @@
+0.4
+  * space distance while font resizing fix;
+  * / -> ! in system wide commands;
+  * !saves - list saves;
+  * !rm - remove save;
+  * fix scroll on title screen.
+
 0.3
   * parser engine updated to 2.2.2;
   * parser correct messages fix;
