@@ -1,15 +1,38 @@
+0.5
+  * tts support for: Linux, Windows and Android.
+  * !tts command;
+  * Accessibility friendly Android version;
+  * better support for Android soft-keyboards;
+  * bugfixes.
+
 0.4
   * space distance while font resizing fix;
+  * freetype support (make WITH_TRUETYPE=1);
+  * libschrift support (make WITH_SCHRIFT=1).
   * / -> ! in system wide commands;
   * !saves - list saves;
   * !rm - remove save;
   * fix scroll on title screen.
 
 0.3
-  * parser engine updated to 2.2.2;
+  * mp 2.2.2;
   * parser correct messages fix;
-  * fix with scroll and keyboard;
+  * autoscript cr/lf compat;
+  * conf.directory can be { };
+  * conf.width (maximum width in elements);
+  * -d as -debug;
+  * more clever resize -> scroll;
   * bug fixes.
 
 0.2
-  * first release for Android.
+  * ctrl+/ctrl- - changes font size;
+  * -i <autoscript> feature;
+  * conf.scroll_drag support;
+  * Android port;
+  * use SDL2 Render API (faster);
+  * conf.settings feature;
+  * metaparser + games fixes;
+  * bugfixes.
+
+0.1
+  * Initial release

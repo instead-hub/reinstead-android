@@ -1,0 +1,4 @@
+* tts support (!tts command);
+* Accessibility friendly Android version;
+* better support for Android soft-keyboards;
+* bugfixes.
