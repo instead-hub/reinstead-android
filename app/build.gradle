@@ -78,7 +78,7 @@ task stamp() {
 }
 task downloadDependencies() {
     def Reinstead = '0.5'
-    def ReinsteadSHA256 = '0e4f25411d25abb54daea551f671d9aaaf7a609a19b23573b670b58e4c03b276'
+    def ReinsteadSHA256 = '3f090cdaf7a6dde2d8a23cd02d192e0d6c1975ffacc3c34049c724ca702fc574'
     def SDL2 = '2.0.16'
     def SDL2SHA256 = '65be9ff6004034b5b2ce9927b5a4db1814930f169c4b2dae0a1e4697075f287b'
     doLast {
