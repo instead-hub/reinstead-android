@@ -18,7 +18,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 30
         versionCode 6
-        versionName "0.6"
+        versionName "0.7"
         externalNativeBuild {
             ndkBuild {
                 arguments "APP_PLATFORM=android-16"
@@ -77,8 +77,8 @@ task stamp() {
     }
 }
 task downloadDependencies() {
-    def Reinstead = '0.6'
-    def ReinsteadSHA256 = '43912a29b312c9cdbea2f53b17083014305fc94d38a8ba4ec4befb2f8811c2f9'
+    def Reinstead = '0.7'
+    def ReinsteadSHA256 = '97ccb9304d4f87247949479450e9a8b5f2f6b4121789a4f46b36f672d8e2bf28'
     def SDL2 = '2.0.16'
     def SDL2SHA256 = '65be9ff6004034b5b2ce9927b5a4db1814930f169c4b2dae0a1e4697075f287b'
     doLast {
@@ -119,6 +119,9 @@ task downloadDependencies() {
         copy {
             from "jni/src/reinstead/data"
             into 'src/main/assets/data'
+        }
+        delete fileTree('src/main/assets/data/games') {
+            include '**/autoscript*'
         }
         copy {
             from "config.lua"
