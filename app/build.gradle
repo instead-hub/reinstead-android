@@ -10,14 +10,13 @@ else {
 }
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion "31.0.0"
     defaultConfig {
         if (buildAsApplication) {
             applicationId "ru.hugeping.reinstead"
         }
         minSdkVersion 18
-        targetSdkVersion 31
+        compileSdk 34
+        targetSdkVersion 34
         versionCode 7
         versionName "0.7"
         externalNativeBuild {
@@ -72,12 +71,12 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 }
 
-task stamp() {
+tasks.register("stamp") {
     doLast {
         new File("${projectDir}/src/main/assets/data", "stamp").text = "${new SimpleDateFormat('ddMMyyyyhhmmss').format(new Date())}"
     }
 }
-task downloadDependencies() {
+tasks.register("downloadDependencies") {
     def Reinstead = '0.7'
     def ReinsteadSHA256 = '97ccb9304d4f87247949479450e9a8b5f2f6b4121789a4f46b36f672d8e2bf28'
     def SDL2 = '2.0.16'
