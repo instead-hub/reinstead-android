@@ -8,6 +8,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.util.Log;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -223,7 +225,11 @@ public class HIDDeviceManager {
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         filter.addAction(HIDDeviceManager.ACTION_USB_PERMISSION);
-        mContext.registerReceiver(mUsbBroadcast, filter);
+        if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
+            mContext.registerReceiver(mUsbBroadcast, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            mContext.registerReceiver(mUsbBroadcast, filter);
+        }
 
         for (UsbDevice usbDevice : mUsbManager.getDeviceList().values()) {
             handleUsbDeviceAttached(usbDevice);
@@ -416,7 +422,11 @@ public class HIDDeviceManager {
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
         filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
-        mContext.registerReceiver(mBluetoothBroadcast, filter);
+        if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
+            mContext.registerReceiver(mBluetoothBroadcast, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            mContext.registerReceiver(mBluetoothBroadcast, filter);
+        }
 
         if (mIsChromebook) {
             mHandler = new Handler(Looper.getMainLooper());
@@ -506,8 +516,9 @@ public class HIDDeviceManager {
     public void disconnectBluetoothDevice(BluetoothDevice bluetoothDevice) {
         synchronized (this) {
             HIDDeviceBLESteamController device = mBluetoothDevices.get(bluetoothDevice);
-            if (device == null)
+            if (device == null) {
                 return;
+            }
 
             int id = device.getId();
             mBluetoothDevices.remove(bluetoothDevice);
