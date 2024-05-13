@@ -17,8 +17,8 @@ android {
         minSdkVersion 18
         compileSdk 34
         targetSdkVersion 34
-        versionCode 7
-        versionName "0.7"
+        versionCode 8
+        versionName "0.8"
         externalNativeBuild {
             ndkBuild {
                 arguments "APP_PLATFORM=android-16"
@@ -77,8 +77,8 @@ tasks.register("stamp") {
     }
 }
 tasks.register("downloadDependencies") {
-    def Reinstead = '0.7'
-    def ReinsteadSHA256 = '97ccb9304d4f87247949479450e9a8b5f2f6b4121789a4f46b36f672d8e2bf28'
+    def Reinstead = '0.8'
+    def ReinsteadSHA256 = '8ceebbcc574dfb0bb7e19976534f05ccced305db195dd37f9513cbaae2527d7d'
     def SDL2 = '2.0.16'
     def SDL2SHA256 = '65be9ff6004034b5b2ce9927b5a4db1814930f169c4b2dae0a1e4697075f287b'
     doLast {

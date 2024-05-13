@@ -1,3 +1,30 @@
+0.8
+  * fix deadlock in summerday;
+  * updated parser;
+  * cleanups in source code.
+
+0.7
+  * freetype kerning fix;
+  * schrift kerning fix;
+  * -noautoload/-noautosave parameters;
+  * mp updates;
+  * october: fixes;
+  * del key (input edit);
+  * fix in reset layout (change font size on the fly);
+  * fix window icons changing;
+  * conf.cmd_aliases;
+  * Windows: redirect stdout/stderr to errors.txt only if no valid stdout;
+  * commands: !script, !debug;
+  * /stop command in autoscript.
+
+0.6
+  * urzi English translation;
+  * new game: october;
+  * better settings loading;
+  * updated parser module;
+  * Android: compat with rotate lock;
+  * fix in paging.
+
 0.5
   * tts support for: Linux, Windows and Android.
   * !tts command;
