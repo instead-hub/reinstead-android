@@ -10,6 +10,7 @@ else {
 }
 
 android {
+    ndkVersion "21.4.7075529"
     defaultConfig {
         if (buildAsApplication) {
             applicationId "ru.hugeping.reinstead"
@@ -17,8 +18,8 @@ android {
         minSdkVersion 18
         compileSdk 34
         targetSdkVersion 34
-        versionCode 8
-        versionName "0.8"
+        versionCode 9
+        versionName "0.9"
         externalNativeBuild {
             ndkBuild {
                 arguments "APP_PLATFORM=android-16"
