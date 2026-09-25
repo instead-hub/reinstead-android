@@ -1,3 +1,5 @@
+import de.undercouch.gradle.tasks.download.Download
+import de.undercouch.gradle.tasks.download.Verify
 import java.text.SimpleDateFormat
 
 def buildAsLibrary = project.hasProperty('BUILD_AS_LIBRARY');
@@ -78,29 +80,36 @@ tasks.register("stamp") {
         new File("${projectDir}/src/main/assets/data", "stamp").text = "${new SimpleDateFormat('ddMMyyyyhhmmss').format(new Date())}"
     }
 }
+def ReinsteadBranch = 'opencode'
+def SDL3 = '3.4.16'
+def SDL3SHA256 = '7322236cd12090c3eb40b9728be4d49c76f66ad17d04369584d4ecad5cf77c68'
+def ReinsteadArchive = file("$buildDir/reinstead-${ReinsteadBranch}.zip")
+def SDL3Archive = file("$buildDir/SDL3-${SDL3}.tar.gz")
+
+def downloadReinstead = tasks.register("downloadReinstead", Download) {
+    src "https://github.com/instead-hub/reinstead/archive/refs/heads/${ReinsteadBranch}.zip"
+    dest ReinsteadArchive
+    overwrite true
+    tempAndMove true
+}
+
+def downloadSDL3 = tasks.register("downloadSDL3", Download) {
+    src "https://github.com/libsdl-org/SDL/releases/download/release-${SDL3}/SDL3-${SDL3}.tar.gz"
+    dest SDL3Archive
+    overwrite false
+    onlyIf { !SDL3Archive.isFile() }
+}
+
+def verifySDL3 = tasks.register("verifySDL3", Verify) {
+    dependsOn downloadSDL3
+    src SDL3Archive
+    algorithm 'SHA-256'
+    checksum SDL3SHA256
+}
+
 tasks.register("downloadDependencies") {
-    def ReinsteadBranch = 'opencode'
-    def SDL3 = '3.4.16'
-    def SDL3SHA256 = '7322236cd12090c3eb40b9728be4d49c76f66ad17d04369584d4ecad5cf77c68'
+    dependsOn downloadReinstead, verifySDL3
     doLast {
-        def ReinsteadArchive = new File(buildDir, "reinstead-${ReinsteadBranch}.zip")
-        def SDL3Archive = new File(buildDir, "SDL3-${SDL3}.tar.gz")
-        download {
-            src "https://github.com/instead-hub/reinstead/archive/refs/heads/${ReinsteadBranch}.zip"
-            dest ReinsteadArchive
-            overwrite true
-        }
-        if (!SDL3Archive.isFile()) {
-            download {
-                src "https://github.com/libsdl-org/SDL/releases/download/release-${SDL3}/SDL3-${SDL3}.tar.gz"
-                dest SDL3Archive
-            }
-        }
-        verifyChecksum {
-            src SDL3Archive
-            algorithm 'SHA-256'
-            checksum SDL3SHA256
-        }
         copy {
             from zipTree(ReinsteadArchive)
             into 'jni/src/'
