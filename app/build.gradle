@@ -78,36 +78,34 @@ tasks.register("stamp") {
     }
 }
 tasks.register("downloadDependencies") {
-    def Reinstead = '0.8'
-    def ReinsteadSHA256 = '8ceebbcc574dfb0bb7e19976534f05ccced305db195dd37f9513cbaae2527d7d'
+    def ReinsteadBranch = 'opencode'
     def SDL2 = '2.0.16'
     def SDL2SHA256 = '65be9ff6004034b5b2ce9927b5a4db1814930f169c4b2dae0a1e4697075f287b'
     doLast {
+        def ReinsteadArchive = new File(buildDir, "reinstead-${ReinsteadBranch}.zip")
+        def SDL2Archive = new File(buildDir, "SDL2-${SDL2}.tar.gz")
         download {
-            src "https://github.com/instead-hub/reinstead/archive/${Reinstead}.zip"
-            dest new File(buildDir, "reinstead-${Reinstead}.zip")
+            src "https://github.com/instead-hub/reinstead/archive/refs/heads/${ReinsteadBranch}.zip"
+            dest ReinsteadArchive
             overwrite true
         }
-        verifyChecksum {
-            src new File(buildDir, "reinstead-${Reinstead}.zip")
-            algorithm 'SHA-256'
-            checksum ReinsteadSHA256
-        }
-        download {
-            src "https://www.libsdl.org/release/SDL2-${SDL2}.tar.gz"
-            dest buildDir
+        if (!SDL2Archive.isFile()) {
+            download {
+                src "https://www.libsdl.org/release/SDL2-${SDL2}.tar.gz"
+                dest SDL2Archive
+            }
         }
         verifyChecksum {
-            src new File(buildDir, "SDL2-${SDL2}.tar.gz")
+            src SDL2Archive
             algorithm 'SHA-256'
             checksum SDL2SHA256
         }
         copy {
-            from zipTree("${buildDir}/reinstead-${Reinstead}.zip")
+            from zipTree(ReinsteadArchive)
             into 'jni/src/'
         }
         delete("jni/src/reinstead")
-        file("jni/src/reinstead-${Reinstead}").renameTo(file('jni/src/reinstead'))
+        file("jni/src/reinstead-${ReinsteadBranch}").renameTo(file('jni/src/reinstead'))
 
         delete("jni/SDL")
         copy {
