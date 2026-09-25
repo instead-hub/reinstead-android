@@ -7,7 +7,7 @@ LOCAL_MODULE := main
 SDL_PATH := ../SDL
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include $(LOCAL_PATH)/reinstead/src/lua $(LOCAL_PATH)/reinstead/src/instead
-LOCAL_CFLAGS = -Dmain=SDL_main
+LOCAL_CFLAGS = -Dmain=SDL_main -DUSE_SDL3
 # Add your application source files here...
 SRC := instead/cache.c instead/idf.c instead/instead.c instead/lfs.c \
 	instead/list.c instead/xoshiro128.c instead/util.c \
@@ -21,8 +21,8 @@ SRC := instead/cache.c instead/idf.c instead/instead.c instead/lfs.c \
 	main.c platform_sdl.c stb_image.c stb_image_resize.c stb_truetype.c system.c
 
 LOCAL_SRC_FILES = $(patsubst %,reinstead/src/%, $(SRC))
-LOCAL_SHARED_LIBRARIES := SDL2
+LOCAL_SHARED_LIBRARIES := SDL3
 
-LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog
+LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -lOpenSLES -llog -landroid -lm
 
 include $(BUILD_SHARED_LIBRARY)

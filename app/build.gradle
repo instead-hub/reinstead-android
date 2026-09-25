@@ -15,18 +15,18 @@ android {
         if (buildAsApplication) {
             applicationId "ru.hugeping.reinstead"
         }
-        minSdkVersion 18
+        minSdkVersion 21
         compileSdk 34
         targetSdkVersion 34
         versionCode 9
         versionName "0.9"
         externalNativeBuild {
             ndkBuild {
-                arguments "APP_PLATFORM=android-16"
+                arguments "APP_PLATFORM=android-21"
                 abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             }
             // cmake {
-            //     arguments "-DANDROID_APP_PLATFORM=android-16", "-DANDROID_STL=c++_static"
+            //     arguments "-DANDROID_APP_PLATFORM=android-21", "-DANDROID_STL=c++_static"
             //     // abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
             //     abiFilters 'arm64-v8a'
             // }
@@ -79,26 +79,26 @@ tasks.register("stamp") {
 }
 tasks.register("downloadDependencies") {
     def ReinsteadBranch = 'opencode'
-    def SDL2 = '2.0.16'
-    def SDL2SHA256 = '65be9ff6004034b5b2ce9927b5a4db1814930f169c4b2dae0a1e4697075f287b'
+    def SDL3 = '3.4.16'
+    def SDL3SHA256 = '7322236cd12090c3eb40b9728be4d49c76f66ad17d04369584d4ecad5cf77c68'
     doLast {
         def ReinsteadArchive = new File(buildDir, "reinstead-${ReinsteadBranch}.zip")
-        def SDL2Archive = new File(buildDir, "SDL2-${SDL2}.tar.gz")
+        def SDL3Archive = new File(buildDir, "SDL3-${SDL3}.tar.gz")
         download {
             src "https://github.com/instead-hub/reinstead/archive/refs/heads/${ReinsteadBranch}.zip"
             dest ReinsteadArchive
             overwrite true
         }
-        if (!SDL2Archive.isFile()) {
+        if (!SDL3Archive.isFile()) {
             download {
-                src "https://www.libsdl.org/release/SDL2-${SDL2}.tar.gz"
-                dest SDL2Archive
+                src "https://github.com/libsdl-org/SDL/releases/download/release-${SDL3}/SDL3-${SDL3}.tar.gz"
+                dest SDL3Archive
             }
         }
         verifyChecksum {
-            src SDL2Archive
+            src SDL3Archive
             algorithm 'SHA-256'
-            checksum SDL2SHA256
+            checksum SDL3SHA256
         }
         copy {
             from zipTree(ReinsteadArchive)
@@ -109,10 +109,10 @@ tasks.register("downloadDependencies") {
 
         delete("jni/SDL")
         copy {
-            from tarTree(resources.gzip("${buildDir}/SDL2-${SDL2}.tar.gz"))
+            from tarTree(SDL3Archive)
             into 'jni/'
         }
-        file("jni/SDL2-${SDL2}").renameTo(file('jni/SDL'))
+        file("jni/SDL3-${SDL3}").renameTo(file('jni/SDL'))
 
         delete("src/main/assets/data")
         copy {

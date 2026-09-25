@@ -69,7 +69,7 @@
             android:alwaysRetainTaskState="true"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustResize"
-            android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation|grammaticalGender|fontScale|fontWeightAdjustment"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
