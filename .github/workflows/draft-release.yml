@@ -80,12 +80,12 @@ jobs:
             "build-tools;34.0.0" \
             "ndk;21.4.7075529"
 
-      - name: Build release APK
+      - name: Build debug APK
         shell: bash
         run: |
           chmod +x gradlew
           ./gradlew --stacktrace :app:downloadDependencies
-          ./gradlew --stacktrace :app:assembleRelease
+          ./gradlew --stacktrace :app:assembleDebug
 
       - name: Prepare release assets
         id: release
@@ -111,8 +111,8 @@ jobs:
           fi
 
           mkdir -p dist
-          apk="reinstead-${version}-unsigned.apk"
-          cp app/build/outputs/apk/release/app-release-unsigned.apk "dist/${apk}"
+          apk="reinstead-${version}-debug.apk"
+          cp app/build/outputs/apk/debug/app-debug.apk "dist/${apk}"
           (
             cd dist
             sha256sum "$apk" > "$apk.sha256"
@@ -132,7 +132,8 @@ jobs:
           body: |
             Draft build from ${{ github.sha }}.
 
-            The APK is unsigned and must be signed before publishing.
+            This is a debug build. It is signed with the shared debug key and
+            is not suitable for distribution.
           files: |
             dist/*.apk
             dist/*.sha256
