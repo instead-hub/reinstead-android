@@ -1,0 +1,132 @@
+name: Draft release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag, for example v0.9.1
+        required: true
+        type: string
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: draft-release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Android SDK packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ env.ANDROID_SDK_ROOT }}/ndk/21.4.7075529
+            ${{ env.ANDROID_SDK_ROOT }}/build-tools/34.0.0
+            ${{ env.ANDROID_SDK_ROOT }}/platforms/android-34
+          key: android-sdk-34-r21e-${{ runner.os }}-${{ hashFiles('app/build.gradle', 'app/jni/Application.mk', 'app/jni/src/Android.mk', 'gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            android-sdk-34-r21e-${{ runner.os }}-
+
+      - name: Cache SDL3 archive
+        uses: actions/cache@v4
+        with:
+          path: app/build/SDL3-3.4.16.tar.gz
+          key: sdl3-3.4.16-${{ runner.os }}-${{ hashFiles('app/build.gradle') }}
+          restore-keys: |
+            sdl3-3.4.16-${{ runner.os }}-
+
+      - name: Install Android SDK packages
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager \
+            "platform-tools" \
+            "platforms;android-34" \
+            "build-tools;34.0.0" \
+            "ndk;21.4.7075529"
+
+      - name: Build release APK
+        shell: bash
+        run: |
+          chmod +x gradlew
+          ./gradlew --stacktrace :app:downloadDependencies
+          ./gradlew --stacktrace :app:assembleRelease
+
+      - name: Prepare release assets
+        id: release
+        shell: bash
+        env:
+          DISPATCH_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            tag="$DISPATCH_TAG"
+          else
+            tag="$GITHUB_REF_NAME"
+          fi
+          if [[ -z "$tag" ]]; then
+            echo "Release tag is empty" >&2
+            exit 1
+          fi
+
+          version=$(sed -n 's/^[[:space:]]*versionName[[:space:]]*"\([^"]*\)".*/\1/p' app/build.gradle | head -1)
+          if [[ -z "$version" ]]; then
+            echo "versionName not found in app/build.gradle" >&2
+            exit 1
+          fi
+
+          mkdir -p dist
+          apk="reinstead-${version}-unsigned.apk"
+          cp app/build/outputs/apk/release/app-release-unsigned.apk "dist/${apk}"
+          (
+            cd dist
+            sha256sum "$apk" > "$apk.sha256"
+          )
+
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "name=Re:instead $tag" >> "$GITHUB_OUTPUT"
+
+      - name: Create draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          generate_release_notes: true
+          name: ${{ steps.release.outputs.name }}
+          tag_name: ${{ steps.release.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          body: |
+            Draft build from ${{ github.sha }}.
+
+            The APK is unsigned and must be signed before publishing.
+          files: |
+            dist/*.apk
+            dist/*.sha256
