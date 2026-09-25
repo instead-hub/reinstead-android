@@ -49,16 +49,14 @@ public class reinsteadActivity extends SDLActivity
 
 	public boolean isSpeakEnabled() {
 		AccessibilityManager am = (AccessibilityManager) getSystemService(ACCESSIBILITY_SERVICE);
-		boolean isAccessibilityEnabled = am.isEnabled();
-		boolean isExploreByTouchEnabled = am.isTouchExplorationEnabled();
-		return isAccessibilityEnabled || isExploreByTouchEnabled;
+		return am != null && am.isTouchExplorationEnabled();
 	}
 
 	public void Speak(String text) {
 		Context context = getApplicationContext();
 		AccessibilityManager manager = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
 
-		if (manager.isEnabled()) {
+		if (manager != null && manager.isTouchExplorationEnabled()) {
 			manager.interrupt();
 			mLayout.announceForAccessibility(text);
 			if (text.contains("\n")) { // hack to not add letters
