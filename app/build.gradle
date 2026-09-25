@@ -80,7 +80,7 @@ tasks.register("stamp") {
         new File("${projectDir}/src/main/assets/data", "stamp").text = "${new SimpleDateFormat('ddMMyyyyhhmmss').format(new Date())}"
     }
 }
-def ReinsteadBranch = 'opencode'
+def ReinsteadBranch = 'master'
 def SDL3 = '3.4.16'
 def SDL3SHA256 = '7322236cd12090c3eb40b9728be4d49c76f66ad17d04369584d4ecad5cf77c68'
 def ReinsteadArchive = file("$buildDir/reinstead-${ReinsteadBranch}.zip")
