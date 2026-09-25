@@ -42,9 +42,6 @@ jobs:
       - name: Set up Gradle cache
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Cache Android SDK packages
         uses: actions/cache@v4
         with:
@@ -67,8 +64,17 @@ jobs:
       - name: Install Android SDK packages
         shell: bash
         run: |
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager \
+          sdkmanager_bin=$(command -v sdkmanager || true)
+          if [[ -z "$sdkmanager_bin" ]]; then
+            sdkmanager_bin=$(ls -1d "$ANDROID_SDK_ROOT"/cmdline-tools/*/bin/sdkmanager 2>/dev/null | sort -V | tail -1 || true)
+          fi
+          if [[ -z "$sdkmanager_bin" ]]; then
+            echo "sdkmanager not found in PATH or in $ANDROID_SDK_ROOT/cmdline-tools" >&2
+            exit 1
+          fi
+
+          yes | "$sdkmanager_bin" --licenses > /dev/null || true
+          "$sdkmanager_bin" \
             "platform-tools" \
             "platforms;android-34" \
             "build-tools;34.0.0" \
