@@ -149,4 +149,7 @@ tasks.register("downloadDependencies") {
     }
 }
 
+tasks.named("stamp") {
+    dependsOn tasks.named("downloadDependencies")
+}
 preBuild.dependsOn stamp
