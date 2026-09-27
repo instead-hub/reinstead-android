@@ -110,7 +110,7 @@ Builds:
 
   - versionName: '0.10'
     versionCode: 10
-    commit: 0.10
+    commit: '0.10'
     subdir: app
     gradle:
       - yes
