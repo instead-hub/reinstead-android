@@ -11,13 +11,12 @@ Donate: https://yoomoney.ru/to/41001612955830
 AutoName: Re:instead
 
 MaintainerNotes: Moved from https://gitlab.com/gl00my/reinstead-fdroid to
-  GitHub, commit history is preserved. Since 0.10 the app builds against SDL3
-  (downloaded release tarball, sha256-pinned) and Re:instead master branch
-  (unpinned, fetched at build time via the downloadDependencies task). The
-  0.10 block uses NDK 28.2 with AGP 8.13/Gradle 8.13, which no longer needs
-  file/make from the buildserver; older blocks keep NDK r21e and the
-  corresponding sudo lines. Replace the 0.10 commit with the full commit hash
-  once the release is tagged.
+  GitHub, commit history is preserved. Since 0.10 the app builds against
+  downloaded release archives, sha256-pinned and fetched at build time via the
+  downloadDependencies task (SDL3 3.4.16 and Re:instead 3.0). The 0.10 block
+  uses NDK 28.2 with AGP 8.13/Gradle 8.13, which no longer needs file/make
+  from the buildserver; older blocks keep NDK r21e and the corresponding sudo
+  lines.
 
 RepoType: git
 Repo: https://github.com/instead-hub/reinstead-android.git
