@@ -1,0 +1,4 @@
+* Android: migrated to SDL3;
+* Android: better detection of speech (TalkBack) state;
+* built against the latest Re:instead;
+* updated build system and dependencies.
